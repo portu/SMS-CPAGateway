@@ -66,30 +66,39 @@ has 'hadError' => (
 # - Public methods -
 
 # Purpose: Send an SMS
-# Usage: object->send(RECIPIENT,MESSAGE);
+# Usage: object->send(RECIPIENT,MESSAGE,PRICE?);
 # RECIPIENT is the recipient phone number, with +XX direction code.
 # MESSAGE is the message.
+# PRICE is the price
 sub send
 {
 	my $self = shift;
 	my $recipient = shift;
 	my $message = shift;
+	my $price = shift;
 	if (not $recipient =~ /^\+/)
 	{
-		$self->_appendError('Recipient does not start with +, making stupid attempt at fixing');
-		if(length($recipient) == 8)
+		if ($recipient =~ /^00/)
 		{
-			$recipient = '+47'.$recipient;
-			$self->_appendError('Succeeded, assuming: '.$recipient);
+			$recipient =~ s/^00/+/;
 		}
 		else
 		{
-			$self->_appendError('Failed, returning failure: '.$recipient);
+			$self->_appendError('Recipient does not start with +');
 			return false;
 		}
 	}
+	if(not defined $price)
+	{
+		$price = $self->price;
+	}
+	elsif(not $price =~ /^\d+$/)
+	{
+		$self->_appendError('Illegal price value. "'.$price.'"');
+		return false;
+	}
 	$self->_recipient($recipient);
-	return $self->_SMSSend($message);
+	return $self->_SMSSend($message,$price);
 }
 
 # --- INTERNAL METHODS AND ATTRIBUTES ---
@@ -199,18 +208,19 @@ sub _errHandler
 }
 
 # Purpose: Construct the request URI and attempt to submit it to the servers
-# Usage: $ret = $self->_SMSSend(message);
+# Usage: $ret = $self->_SMSSend(message,$price);
 sub _SMSSend
 {
 	my $self = shift;
 	my $message = shift;
+	my $price = shift;
 	# Construct URI
 	my $URI = 	'?auth='.$self->_uriE->encode($self->key).
 				'&id='.$self->_uriE->encode($self->_getID).
 				'&from='.$self->_uriE->encode($self->fromNo).
 				'&to='.$self->_uriE->encode($self->_recipient).
 				'&type=text&data='.$self->_uriE->encode($message).
-				'&price='.$self->price;
+				'&price='.$price;
 
 	foreach my $host (@{$self->servers})
 	{
@@ -266,7 +276,7 @@ SMS::CPAGateway - Send an SMS through a gateway using the CPA Gateway protocol
 
 	my $sms = SMS::CPAGateway->new(
 		# Parameters shown with their defaults
-		price => 0,
+		price => 0,			# Can also be overriden on a per-message basis
 		fromNo => undef,	# Value required at construction time
 		key => undef,		# Value required at construction time
 		servers => undef,	# Value required at construction time
@@ -320,7 +330,8 @@ use.
 
 =item price
 
-The price of an SMS. This defaults to 0.
+The price of an SMS. This defaults to 0. This can also be supplied as a parameter
+to send()
 
 =item key
 
@@ -341,14 +352,17 @@ Example:
 
 =back
 
-=item send
+=item send($number,$message,$price = $object->price);
 
-Sends a message. It takes exactly two parameters, a recipient number and
-a message. The recipient is the phone number with the +NN[N?] direction
-code.
+Sends a message. It takes either two or three parameters. $number is the
+recipient phone number and $message is the text message to send. $price
+is the price of the message, this parameter is optional and defaults to
+the value of the price attribute if it is undef.
+
+The recipient phone number must include the direction code.
 
 Usage:
-	$sms->send('+0000000000','Message');
+	$sms->send('+0000000000','Message',0);
 
 This returns true on success and false on failure. See also hadError and
 errors.
