@@ -257,7 +257,7 @@ __END__
 
 =head1 NAME
 
-SMS::CPAGateway - Send an SMS through a gateway using the CPA Gateway protocol v2
+SMS::CPAGateway - Send an SMS through a gateway using the CPA Gateway protocol
 
 =head1 SYNOPSIS
 
@@ -292,7 +292,8 @@ SMS::CPAGateway - Send an SMS through a gateway using the CPA Gateway protocol v
 =head1 DESCRIPTION
 
 This module offers a convenient way of sending an SMS from a Perl program
-using any server(s) that understand the CPA Gateway protocol version 2.
+using any server(s) that understand the CPA Gateway protocol version 2, which
+is the current release of the protocol.
 
 This module and the author are not affiliated with Teletopia interactive
 in any way.
@@ -393,6 +394,9 @@ done by HTTP POST requests to a web server, and there is very little a module
 can add to that as there are a load of different ways to read parameters,
 and there is little that has to be done with that data without entering
 site-specific logic.
+
+Please report any bugs or feature requests to
+L<http://github.com/portu/SMS-CPAGateway/issues>.
 
 =head1 SEE ALSO
 
