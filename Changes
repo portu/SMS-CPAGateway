@@ -1,0 +1,6 @@
+Revision history for Perl extension Net::SMS::CPAGateway2.
+
+0.01  Wed Feb 10 09:02:48 2010
+	- original version; created by h2xs 1.23 with options
+		-b 5.8.0 -AX Net::SMS::CPAGateway2
+
