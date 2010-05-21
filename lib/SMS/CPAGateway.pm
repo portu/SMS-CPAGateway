@@ -312,47 +312,15 @@ in any way.
 
 =over
 
-=item new
+=item I<new>
 
 Constructs a new instance of the class. You can supply any of the attributes
-listed below to this method during construction time to initialize them.
+listed below in the I<Attributes> section to this method during construction
+time to initialize them.
 
 The following attributes MUST be supplied at construction time: fromNo, key
 
-=head2 Attributes
-
-=over
-
-=item fromNo
-
-The from number. Must be a number that you are authorized by the server to
-use.
-
-=item price
-
-The price of an SMS. This defaults to 0. This can also be supplied as a parameter
-to send()
-
-=item key
-
-Your authorization key.
-
-=item id
-
-The ID that is sent along with the message. If this is not supplied then
-it will be automatically generated. See the id method.
-
-=item servers
-
-An arrayref of servers to attempt. The list of servers are provided by the
-service provider.
-
-Example:
-	 [ 'http://gateway1.example.com:12345', 'http://gateway2.example.com:12345', 'http://gateway3.example.com:12345' ]
-
-=back
-
-=item send($number,$message,$price = $object->price);
+=item I<send($number,$message,$price = $object-E<gt>price);>
 
 Sends a message. It takes either two or three parameters. $number is the
 recipient phone number and $message is the text message to send. $price
@@ -367,7 +335,7 @@ Usage:
 This returns true on success and false on failure. See also hadError and
 errors.
 
-=item hadError
+=item I<hadError>
 
 Returns true if an error has occured when sending since this object was
 instantiated. This does NOT indicate that sending a message, or even the
@@ -375,11 +343,11 @@ last message, failed. The return value of send() indicates that. An error
 could for instance be that a single server failed, and that we thus
 fell back to either of the fallback servers.
 
-=item errors
+=item I<errors>
 
 Returns an array of error messages.
 
-=item id
+=item I<id>
 
 This is used to set and get the id used for a message. Note than an ID can
 only be used to send a single message, and if the same ID is attempted to be
@@ -396,6 +364,40 @@ If called without any parameters, returns either of the following:
 	- The id that was used to send the last SMS sent (as long as you have
 		not already set an ID that will be used for the next one
 		by calling this method with a string value).
+
+
+=back
+
+=head2 Attributes
+
+=over
+
+=item I<fromNo>
+
+The from number. Must be a number that you are authorized by the server to
+use.
+
+=item I<price>
+
+The price of an SMS. This defaults to 0. This can also be supplied as a parameter
+to send()
+
+=item I<key>
+
+Your authorization key.
+
+=item I<id>
+
+The ID that is sent along with the message. If this is not supplied then
+it will be automatically generated. See the id method.
+
+=item I<servers>
+
+An arrayref of servers to attempt. The list of servers are provided by the
+service provider.
+
+Example:
+	 [ 'http://gateway1.example.com:12345', 'http://gateway2.example.com:12345', 'http://gateway3.example.com:12345' ]
 
 =back
 
@@ -427,5 +429,3 @@ Copyright (C) 2010 by Eskild Hustvedt
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.0 or,
 at your option, any later version of Perl 5 you may have available.
-
-=end
